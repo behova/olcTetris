@@ -252,6 +252,48 @@ void Board::drawUI(olc::PixelGameEngine *pge, int stX, int stY, int pxW,
     }
   }
 }
+/* Draw Game over in UI*/
+void Board::drawGameOver(olc::PixelGameEngine *pge, int stX, int stY, int pxW,
+                         int pxH, int score, int level, int lines) {
+  /*draw UI box*/
+  pge->FillRect(stX + (pxW * columns), stY, pxW * 9, pxH * rows - (pxH * 2),
+                olc::BLACK);
+  pge->DrawRect(stX + (pxW * columns), stY, pxW * 9, pxH * rows - (pxH * 2));
+
+  pge->DrawRect(stX + (pxW * columns), stY + (pxH) + (pxH / 2), pxW * 9,
+                pxH * 3, olc::GREEN);
+  pge->DrawString((stX + (pxW * columns) + (pxW * 2) + (pxW / 2)),
+                  (stY + (pxH * 2)), "GAME", olc::MAGENTA);
+  pge->DrawString((stX + (pxW * columns) + (pxW * 2) + (pxW / 2)),
+                  (stY + (pxH * 3)), "OVER", olc::MAGENTA);
+
+  /*draw level box*/
+  pge->DrawRect(stX + (pxW * columns) + (pxW), stY + (pxH * 6), pxW * 7,
+                pxH * 4, olc::BLUE);
+  pge->DrawString(stX + (pxW * columns) + (pxW * 2), stY + (pxH * 6) + (pxH),
+                  "LEVEL", olc::MAGENTA);
+  pge->DrawString(stX + (pxW * columns) + (pxW * 2),
+                  stY + (pxH * 6) + (pxH * 2 + pxH / 2), std::to_string(level),
+                  olc::MAGENTA);
+
+  /*draw lines box*/
+  pge->DrawRect(stX + (pxW * columns) + (pxW), stY + (pxH * 11), pxW * 7,
+                pxH * 4, olc::CYAN);
+  pge->DrawString(stX + (pxW * columns) + (pxW * 2), stY + (pxH * 11) + (pxH),
+                  "LINES", olc::MAGENTA);
+  pge->DrawString(stX + (pxW * columns) + (pxW * 2),
+                  stY + (pxH * 11) + (pxH * 2 + pxH / 2), std::to_string(lines),
+                  olc::MAGENTA);
+
+  /*draw Score box*/
+  pge->DrawRect(stX + (pxW * columns) + (pxW), stY + (pxH * 16), pxW * 7,
+                pxH * 4, olc::CYAN);
+  pge->DrawString(stX + (pxW * columns) + (pxW * 2), stY + (pxH * 16) + (pxH),
+                  "SCORE", olc::MAGENTA);
+  pge->DrawString(stX + (pxW * columns) + (pxW * 2),
+                  stY + (pxH * 16) + (pxH * 2 + pxH / 2), std::to_string(score),
+                  olc::MAGENTA);
+}
 
 int Board::getMinoIndex(int px, int py, int rotation) {
 
@@ -388,4 +430,20 @@ int Board::checkLines() {
     rowValue = 0;
   }
   return matchedRows;
+}
+
+int Board::checkGameOver() {
+  int i, j;
+  int gameOver;
+
+  for (i = 0; i < rows; i++) {
+    for (j = 0; j < columns; j++) {
+      if (i == 0 || i == 1) {
+        if (lockedBoard[i][j] > 0 && lockedBoard[i][j] != 9) {
+          gameOver = 1;
+        }
+      }
+    }
+  }
+  return gameOver;
 }

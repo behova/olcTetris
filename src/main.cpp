@@ -5,6 +5,7 @@
 #include "olcPixelGameEngine.h"
 #include <cstdio>
 #include <iostream>
+#include <string>
 
 class Engine : public olc::PixelGameEngine {
 public:
@@ -54,7 +55,7 @@ public:
     // when piece is locked it's added to locked array
     pieceLocked = 0;
     // delay will decrease as time goes on. checked against fElaspedTime
-    delayTime = .5;
+    delayTime = .3;
     // acumulate fElapsed time
     fAccumulatedTime = 0;
     // Pause check
@@ -105,7 +106,16 @@ public:
         }
       }
 
-    } else {
+    }
+    /*Game over screen*/
+    else if (gameOver == 1) {
+      gameBoard.draw(this, drawX, drawY, drawW, drawH);
+      gameBoard.drawGameOver(this, drawX, drawY, drawW, drawH, score, level,
+                             lines);
+
+    }
+    /*main game loop*/
+    else {
 
       /* Handle user input*/
       if (GetKey(olc::SPACE).bPressed) {
@@ -192,6 +202,9 @@ public:
           lines = 0;
           delayTime -= .015;
         }
+
+        // check for gameOver
+        gameOver = gameBoard.checkGameOver();
       }
 
       /* Main draw loop*/
