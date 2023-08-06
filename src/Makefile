@@ -19,8 +19,11 @@ logic.o: olc.o tetrominos.o
 board.o: olc.o tetrominos.o logic.o
 	$(CC) Board.cpp -c -o board.o
 
-main.o: olc.o tetrominos.o logic.o board.o
+graphics.o: olc.o tetrominos.o logic.o board.o
+	$(CC) Graphics.cpp -c -o graphics.o
+
+main.o: olc.o tetrominos.o logic.o board.o graphics.o
 	$(CC) main.cpp -c -o main.o
 
-tetris: olc.o tetrominos.o logic.o board.o main.o
-	$(CC) olc.o tetrominos.o logic.o board.o main.o -lX11 -lGL -lpthread -lpng -lstdc++fs -std=c++17 -o tetris
+tetris: olc.o tetrominos.o logic.o board.o graphics.o main.o
+	$(CC) olc.o tetrominos.o logic.o board.o graphics.o main.o -lX11 -lGL -lpthread -lpng -lstdc++fs -std=c++17 -o tetris

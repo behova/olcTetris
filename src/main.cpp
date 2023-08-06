@@ -1,5 +1,6 @@
 
 #include "Board.h"
+#include "Graphics.h"
 #include "Logic.h"
 #include "Tetrominos.h"
 #include "olcPixelGameEngine.h"
@@ -9,11 +10,12 @@
 
 class Engine : public olc::PixelGameEngine {
 public:
-  Engine() { sAppName = "Tetris"; }
+  Engine() { sAppName = "Tetris"; };
 
 private:
-  int drawW, drawH;
-  int drawX, drawY;
+  int rows, columns;
+  int cellW, cellH;
+  int stX, stY;
   int gameOver;
   int score;
   int level;
@@ -33,12 +35,15 @@ public:
   bool OnUserCreate() override {
     // Called once at the start, so create things here
 
+    // set rows and columns
+    rows = 26;
+    columns = 11;
     // set block width/height
-    drawW = 8;
-    drawH = 8;
+    cellW = 8;
+    cellH = 8;
     // set x/y for drawing the board
-    drawX = ScreenWidth() / 2 - ((drawW * 11));
-    drawY = ScreenHeight() / 2 - ((drawH * 26) / 2);
+    stX = ScreenWidth() / 2 - ((cellW * 11));
+    stY = ScreenHeight() / 2 - ((cellH * 26) / 2);
     // gameOver global
     gameOver = 0;
     // score global
@@ -62,6 +67,8 @@ public:
     pause = 0;
     // user input
     input = 0;
+
+    UI.setUI(rows, columns, stX, stY, cellW, cellH);
 
     // seed srand
     srand(time(NULL));
@@ -88,14 +95,9 @@ public:
 
       gameBoard.addPiece(currentPiece, currentRotation, currentX, currentY);
 
-      gameBoard.draw(this, drawX, drawY, drawW, drawH);
+      UI.drawBoard(this, &gameBoard.currentBoard);
 
-      for (int x = 0; x < ScreenWidth(); x++) {
-        for (int y = 0; y < ScreenHeight(); y++) {
-          Draw(x, y, olc::Pixel(184, 184, 184, 10));
-        }
-      }
-      DrawString(drawX * 2, drawY * 2, "Game Paused", olc::BLUE);
+      UI.drawPause(this, score, level, lines);
 
       if (GetKey(olc::SPACE).bPressed) {
         pause = 0;
@@ -109,9 +111,9 @@ public:
     }
     /*Game over screen*/
     else if (gameOver == 1) {
-      gameBoard.draw(this, drawX, drawY, drawW, drawH);
-      gameBoard.drawGameOver(this, drawX, drawY, drawW, drawH, score, level,
-                             lines);
+      UI.drawBoard(this, &gameBoard.currentBoard);
+
+      UI.drawGameOver(this, score, level, lines);
 
     }
     /*main game loop*/
@@ -220,10 +222,9 @@ public:
 
         gameBoard.addPiece(currentPiece, currentRotation, currentX, currentY);
 
-        gameBoard.draw(this, drawX, drawY, drawW, drawH);
+        UI.drawBoard(this, &gameBoard.currentBoard);
 
-        gameBoard.drawUI(this, drawX, drawY, drawW, drawH, score, level, lines,
-                         nextPiece);
+        UI.drawUI(this, score, level, lines, nextPiece);
       }
 
       /*Advance tetrimino on time interval*/
@@ -252,6 +253,7 @@ protected:
   Board gameBoard;
   Tetriminos tetriminos;
   Logic logic;
+  Graphics UI;
 };
 
 int main() {
