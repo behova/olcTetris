@@ -28,6 +28,8 @@ private:
   int pieceLock;
   double delayTime;
   double fAccumulatedTime;
+  double fMoveTime;
+  double fLatchTime;
   int pause;
   int input;
 
@@ -154,7 +156,11 @@ public:
     // delay will decrease as time goes on. checked against fElaspedTime
     delayTime = logic.getDelayTime(level);
     // acumulate fElapsed time
-    fAccumulatedTime = 0;
+    fAccumulatedTime = 0.0;
+    // acumulate time before move
+    fMoveTime = 0.0;
+    // latchTime for single button press
+    fLatchTime = 0.0;
     // Pause check
     pause = 0;
     // user input
@@ -177,50 +183,55 @@ public:
   {
     // calculate time interval
     fAccumulatedTime += fElapsedTime;
-    /*pause game loop*/
-    /*Game over screen*/
+    fMoveTime += fElapsedTime;
+    fLatchTime -= fElapsedTime;
+    if (fLatchTime <= 0.0) {
+      fLatchTime = 0.0;
+    }
+
+    /* Handle Pause input*/
+    if (GetKey(olc::F1).bPressed) {
+      level += 1;
+      delayTime = logic.getDelayTime(level);
+    }
+    if (GetKey(olc::ESCAPE).bPressed) {
+      pause = 1;
+    }
+
     /*main game loop*/
-
-    /* Handle user input*/
-
     if (pause == 1) {
+      /*pause game loop*/
       pauseLoop();
     } else if (gameOver == 1) {
+      /*Game over screen*/
       gameOverLoop();
-    } else {
-      if (GetKey(olc::LEFT).bPressed) {
+    } else if (fMoveTime >= .07 && fLatchTime <= 0.0) {
+      if (GetKey(olc::LEFT).bHeld) {
         if (gameBoard.checkCollision(currentPiece, currentRotation,
                                      currentX - 1, currentY) == 0) {
           currentX -= 1;
         }
       }
-      if (GetKey(olc::UP).bPressed) {
+      if (GetKey(olc::UP).bHeld) {
         if (gameBoard.checkCollision(currentPiece, currentRotation + 1,
                                      currentX, currentY) == 0) {
           currentRotation += 1;
         }
       }
-      if (GetKey(olc::RIGHT).bPressed) {
+      if (GetKey(olc::RIGHT).bHeld) {
         if (gameBoard.checkCollision(currentPiece, currentRotation,
                                      currentX + 1, currentY) == 0) {
           currentX += 1;
         }
       }
-      if (GetKey(olc::DOWN).bPressed) {
+      if (GetKey(olc::DOWN).bHeld) {
         if (gameBoard.checkCollision(currentPiece, currentRotation, currentX,
                                      currentY + 1) == 0) {
           currentY += 1;
         }
+        // todo: change gravity here
+      }
 
-        // change advancing of row here
-      }
-      if (GetKey(olc::F1).bPressed) {
-        level += 1;
-        delayTime = logic.getDelayTime(level);
-      }
-      if (GetKey(olc::ESCAPE).bPressed) {
-        pause = 1;
-      }
       /* Catch all collision check*/
       collisionCheck();
 
@@ -228,12 +239,50 @@ public:
        * piece*/
       pieceLocked();
 
-      /* Main draw loop*/
-      mainDrawLoop();
+      // reset move delay
+      fMoveTime = 0;
+    } else {
+      if (GetKey(olc::LEFT).bPressed) {
+        if (gameBoard.checkCollision(currentPiece, currentRotation,
+                                     currentX - 1, currentY) == 0) {
+          currentX -= 1;
+          fLatchTime = .1;
+        }
+      }
+      if (GetKey(olc::UP).bPressed) {
+        if (gameBoard.checkCollision(currentPiece, currentRotation + 1,
+                                     currentX, currentY) == 0) {
+          currentRotation += 1;
+          fLatchTime = .18;
+        }
+      }
+      if (GetKey(olc::RIGHT).bPressed) {
+        if (gameBoard.checkCollision(currentPiece, currentRotation,
+                                     currentX + 1, currentY) == 0) {
+          currentX += 1;
+          fLatchTime = .1;
+        }
+      }
+      if (GetKey(olc::DOWN).bPressed) {
+        if (gameBoard.checkCollision(currentPiece, currentRotation, currentX,
+                                     currentY + 1) == 0) {
+          currentY += 1;
+          fLatchTime = .1;
+        }
+      }
 
-      /*Advance tetrimino on time interval*/
-      advanceRow();
+      /* Catch all collision check*/
+      collisionCheck();
+
+      /*If piece is locked reset tetrimino variables and switch to next
+       * piece*/
+      pieceLocked();
     }
+
+    /* Main draw loop*/
+    mainDrawLoop();
+    /*Advance tetrimino on time interval*/
+    advanceRow();
 
     return true;
   }
