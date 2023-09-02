@@ -18,3 +18,17 @@ int Logic::getLevel(int currentLevel, int currentLines) {
   }
   return levelIncrease;
 }
+
+double Logic::getDelayTime(int currentLevel) {
+
+  double time = (0.8 - ((currentLevel - 1) * 0.007));
+  int i;
+  int exponent = ((currentLevel - 1));
+
+  double exponentialTime = time;
+  for (i = 0; i < exponent; i++) {
+    exponentialTime = time * exponentialTime;
+  }
+
+  return exponentialTime;
+}

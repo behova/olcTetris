@@ -48,7 +48,7 @@ public:
     gameOver = 0;
     // score global
     score = 0;
-    level = 0;
+    level = 8;
     lines = 0;
     // info for drawing pieces
     nextPiece = tetriminos.getRandomTetrimino();
@@ -60,7 +60,7 @@ public:
     // when piece is locked it's added to locked array
     pieceLocked = 0;
     // delay will decrease as time goes on. checked against fElaspedTime
-    delayTime = .3;
+    delayTime = logic.getDelayTime(level);
     // acumulate fElapsed time
     fAccumulatedTime = 0;
     // Pause check
@@ -120,7 +120,7 @@ public:
     else {
 
       /* Handle user input*/
-      if (GetKey(olc::SPACE).bPressed) {
+      if (GetKey(olc::ESCAPE).bPressed) {
         pause = 1;
       }
       if (GetKey(olc::LEFT).bPressed) {
@@ -134,6 +134,9 @@ public:
       }
       if (GetKey(olc::DOWN).bPressed) {
         input = 4;
+      }
+      if (GetKey(olc::F1).bPressed) {
+        input = 5;
       }
       // only one move can be made per frame
       if (pieceLocked == 0) {
@@ -170,6 +173,10 @@ public:
           } else {
             break;
           }
+        case 5:
+          level += 1;
+          delayTime = logic.getDelayTime(level);
+          break;
         default:
           break;
         }
@@ -184,6 +191,9 @@ public:
       /*If piece is locked reset tetrimino variables and switch to next piece*/
       if (pieceLocked == 1) {
         gameBoard.addLocked(currentPiece, currentRotation, currentX, currentY);
+
+        // increase score for piece lock(check last key press to see if
+        // hardlock. check current peice for amount scored)
 
         // reset y x and piecelock
         currentRotation = 0;
@@ -202,7 +212,7 @@ public:
         if (logic.getLevel(level, lines) == true) {
           level += 1;
           lines = 0;
-          delayTime -= .015;
+          delayTime = logic.getDelayTime(level);
         }
 
         // check for gameOver
@@ -242,7 +252,7 @@ public:
         // reset accumulated time
         fAccumulatedTime = 0;
 
-        score += 1;
+        // score += 1;
       }
     }
 

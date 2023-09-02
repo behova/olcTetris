@@ -8,8 +8,9 @@ public:
 
 public:
   int getLevel(int currentLevel, int currentLines);
-  int getTimeInterval(int currentLevel);
-  int getScore();
+  int getScore(int currentLevel);
+  // needs to return time in seconds
+  double getDelayTime(int currentLevel);
 };
 
 #endif
