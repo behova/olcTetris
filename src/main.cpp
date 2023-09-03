@@ -6,6 +6,7 @@
 #include "olcPixelGameEngine.h"
 #include <cstdio>
 #include <iostream>
+#include <ostream>
 #include <string>
 
 class Engine : public olc::PixelGameEngine {
@@ -189,16 +190,9 @@ public:
       fLatchTime = 0.0;
     }
 
-    /* Handle Pause input*/
-    if (GetKey(olc::F1).bPressed) {
-      level += 1;
-      delayTime = logic.getDelayTime(level);
-    }
-    if (GetKey(olc::ESCAPE).bPressed) {
-      pause = 1;
-    }
-
     /*main game loop*/
+    /* Handle Pause input*/
+
     if (pause == 1) {
       /*pause game loop*/
       pauseLoop();
@@ -242,6 +236,13 @@ public:
       // reset move delay
       fMoveTime = 0;
     } else {
+      if (GetKey(olc::F1).bPressed) {
+        level += 1;
+        delayTime = logic.getDelayTime(level);
+      }
+      if (GetKey(olc::ESCAPE).bPressed) {
+        pause = 1;
+      }
       if (GetKey(olc::LEFT).bPressed) {
         if (gameBoard.checkCollision(currentPiece, currentRotation,
                                      currentX - 1, currentY) == 0) {
@@ -279,10 +280,12 @@ public:
       pieceLocked();
     }
 
-    /* Main draw loop*/
-    mainDrawLoop();
-    /*Advance tetrimino on time interval*/
-    advanceRow();
+    if (pause == 0) {
+      /* Main draw loop*/
+      mainDrawLoop();
+      /*Advance tetrimino on time interval*/
+      advanceRow();
+    }
 
     return true;
   }
