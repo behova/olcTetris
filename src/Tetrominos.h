@@ -2,17 +2,24 @@
 #define TETRIMINOS_H_
 
 #include "olcPixelGameEngine.h"
+#include <vector>
 
 // main gameboard class
 
 class Tetriminos {
 public:
+  Tetriminos();
+
   struct tetrimino {
     int block[16];
   };
-  // array of tetrimino structs that contain an array that represents the
-  // tetrimino
-  tetrimino shapeArray[7] = {
+
+  // Vector that contains each type of tetrimino /// reimplimentation with
+  // vectors
+  tetrimino lastTetrimino;
+  std::vector<tetrimino> bagOne;
+  std::vector<tetrimino> bagTwo;
+  std::vector<tetrimino> vecTetriminos = {
       {{0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0}
 
       },
@@ -34,9 +41,7 @@ public:
       }
 
   };
-
-public:
   // get struct that contains array of tetrimino
-  struct tetrimino getRandomTetrimino();
+  struct tetrimino getVecRandomTetrimino();
 };
 #endif

@@ -74,7 +74,7 @@ public:
 
       // set the next tetrimino
       currentPiece = nextPiece;
-      nextPiece = tetriminos.getRandomTetrimino();
+      nextPiece = bag.getVecRandomTetrimino();
 
       // check for row match
       lines += gameBoard.checkLines();
@@ -145,8 +145,8 @@ public:
     level = 0;
     lines = 0;
     // info for drawing pieces
-    nextPiece = tetriminos.getRandomTetrimino();
-    currentPiece = tetriminos.getRandomTetrimino();
+    nextPiece = bag.getVecRandomTetrimino();
+    currentPiece = bag.getVecRandomTetrimino();
     currentRotation = 0;
     // current x/y of piece based on gameboard grid
     currentX = 3;
@@ -294,6 +294,7 @@ protected:
   Tetriminos tetriminos;
   Logic logic;
   Graphics UI;
+  Tetriminos bag;
 };
 
 int main() {

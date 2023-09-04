@@ -1,26 +1,44 @@
 
 #include "Tetrominos.h"
+#include <cstdlib>
+#include <variant>
 
-// returns tetrimino struct definition in Tetriminos class
-Tetriminos::tetrimino Tetriminos::getRandomTetrimino() {
-  int r = rand() % 7;
+Tetriminos::Tetriminos() {
+  bagOne = vecTetriminos;
+  bagTwo = vecTetriminos;
+}
 
-  switch (r) {
-  case 0:
-    return shapeArray[0];
-  case 1:
-    return shapeArray[1];
-  case 2:
-    return shapeArray[2];
-  case 3:
-    return shapeArray[3];
-  case 4:
-    return shapeArray[4];
-  case 5:
-    return shapeArray[5];
-  case 6:
-    return shapeArray[6];
-  default:
-    return shapeArray[0];
+Tetriminos::tetrimino Tetriminos::getVecRandomTetrimino() {
+  srand(time(NULL));
+  int rbagOneChoice;
+  int rbagTwoChoice;
+  int rbagChoice = rand() % 2;
+  tetrimino finalChoice;
+
+  // check if bags are empty and set random to bag size
+  if (bagOne.size() > 0) {
+    rbagOneChoice = rand() % (bagOne.size());
+  } else {
+    bagOne = vecTetriminos;
+    rbagOneChoice = rand() % 6;
   }
+  if (bagTwo.size() > 0) {
+    rbagTwoChoice = rand() % (bagTwo.size());
+  } else {
+    bagTwo = vecTetriminos;
+    rbagTwoChoice = rand() % 6;
+  }
+  // switch randomly chosen bag then return a random piece from the bag
+  // then moves the choice to the back and pops it
+  switch (rbagChoice) {
+  case 0:
+    finalChoice = bagOne.at(rbagOneChoice);
+    std::swap(bagOne[rbagOneChoice], bagOne.back());
+    bagOne.pop_back();
+  case 1:
+    finalChoice = bagTwo.at(rbagTwoChoice);
+    std::swap(bagTwo[rbagOneChoice], bagTwo.back());
+    bagTwo.pop_back();
+  }
+  return finalChoice;
 }
