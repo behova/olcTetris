@@ -117,16 +117,159 @@ int Logic::checkLevelIncrease(int currentLevel, int currentLines) {
   return levelIncrease;
 }
 
-double Logic::getDelayTime(int currentLevel) {
-
-  double time = (0.8 - ((currentLevel - 1) * 0.007));
-  int i;
-  int exponent = ((currentLevel - 1));
-
-  double exponentialTime = time;
-  for (i = 0; i < exponent; i++) {
-    exponentialTime = time * exponentialTime;
+double Logic::getDropTime(int currentLevel) {
+  double fps = 60.0;
+  double fpr;
+  double time;
+  switch (currentLevel) {
+  case 0:
+    fpr = 53;
+    break;
+  case 1:
+    fpr = 49;
+    break;
+  case 2:
+    fpr = 45;
+    break;
+  case 3:
+    fpr = 41;
+    break;
+  case 4:
+    fpr = 37;
+    break;
+  case 5:
+    fpr = 33;
+    break;
+  case 6:
+    fpr = 28;
+    break;
+  case 7:
+    fpr = 22;
+    break;
+  case 8:
+    fpr = 17;
+    break;
+  case 9:
+    fpr = 11;
+    break;
+  case 10:
+    fpr = 10;
+    break;
+  case 11:
+    fpr = 9;
+    break;
+  case 12:
+    fpr = 8;
+    break;
+  case 13:
+    fpr = 7;
+    break;
+  case 14:
+    fpr = 6;
+    break;
+  case 15:
+    fpr = 6;
+    break;
+  case 16:
+    fpr = 5;
+    break;
+  case 17:
+    fpr = 5;
+    break;
+  case 18:
+    fpr = 4;
+    break;
+  case 19:
+    fpr = 4;
+    break;
+  case 20:
+    fpr = 3;
+    break;
+  default:
+    fpr = 3;
+    break;
   }
+  // get frames spent per row as a percentage of frames per second
+  time = (fpr / fps);
 
-  return exponentialTime;
+  return time;
+}
+
+double Logic::getSoftDropTime(int currentLevel) {
+  double fps = 60.0;
+  double fpr;
+  double time;
+  double drop = .1;
+  switch (currentLevel) {
+  case 0:
+    fpr = 53;
+    break;
+  case 1:
+    fpr = 49;
+    break;
+  case 2:
+    fpr = 45;
+    break;
+  case 3:
+    fpr = 41;
+    break;
+  case 4:
+    fpr = 37;
+    break;
+  case 5:
+    fpr = 33;
+    break;
+  case 6:
+    fpr = 28;
+    break;
+  case 7:
+    fpr = 22;
+    break;
+  case 8:
+    fpr = 17;
+    break;
+  case 9:
+    fpr = 11;
+    break;
+  case 10:
+    fpr = 10;
+    break;
+  case 11:
+    fpr = 9;
+    break;
+  case 12:
+    fpr = 8;
+    break;
+  case 13:
+    fpr = 7;
+    break;
+  case 14:
+    fpr = 6;
+    break;
+  case 15:
+    fpr = 6;
+    break;
+  case 16:
+    fpr = 5;
+    break;
+  case 17:
+    fpr = 5;
+    break;
+  case 18:
+    fpr = 4;
+    break;
+  case 19:
+    fpr = 4;
+    break;
+  case 20:
+    fpr = 3;
+    break;
+  default:
+    fpr = 3;
+    break;
+  }
+  // get frames spent per row as a percentage of frames per second
+  time = (fpr / fps) * drop;
+
+  return time;
 }

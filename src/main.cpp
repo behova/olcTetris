@@ -28,7 +28,8 @@ private:
   int currentX;
   int currentY;
   int pieceLock;
-  double delayTime;
+  double dropTime;
+  double altDelayTime;
   double fAccumulatedTime;
   double fMoveTime;
   double fLatchTime;
@@ -83,7 +84,7 @@ public:
       // increase level for line accumulation
       if (logic.checkLevelIncrease(level, lines) == true) {
         level += 1;
-        delayTime = logic.getDelayTime(level);
+        dropTime = logic.getDropTime(level);
       }
 
       // check for gameOver
@@ -91,7 +92,7 @@ public:
     }
   }
   void advanceRow() {
-    if (fAccumulatedTime >= delayTime) {
+    if (fAccumulatedTime >= dropTime) {
 
       if (gameBoard.checkCollision(currentPiece, currentRotation, currentX,
                                    currentY + 1) == 0) {
@@ -118,7 +119,7 @@ public:
 
     UI.drawPause(this, score, level, lines);
 
-    std::cout << bag.bag.size();
+    // std::cout << bag.bag.size();
 
     if (GetKey(olc::ESCAPE).bPressed) {
       pause = 0;
@@ -157,7 +158,7 @@ public:
     // when piece is locked it's added to locked array
     pieceLock = 0;
     // delay will decrease as time goes on. checked against fElaspedTime
-    delayTime = logic.getDelayTime(level);
+    dropTime = logic.getDropTime(level);
     // acumulate fElapsed time
     fAccumulatedTime = 0.0;
     // acumulate time before move
@@ -190,14 +191,18 @@ public:
     }
 
     /*main game loop*/
-    /* Handle Pause input*/
 
+    /* Handle Pause input*/
     if (pause == 1) {
+
       /*pause game loop*/
       pauseLoop();
+
     } else if (gameOver == 1) {
+
       /*Game over screen*/
       gameOverLoop();
+
     } else if (fMoveTime >= .07 && fLatchTime <= 0.0) {
       if (GetKey(olc::LEFT).bHeld) {
         if (gameBoard.checkCollision(currentPiece, currentRotation,
@@ -218,11 +223,9 @@ public:
         }
       }
       if (GetKey(olc::DOWN).bHeld) {
-        if (gameBoard.checkCollision(currentPiece, currentRotation, currentX,
-                                     currentY + 1) == 0) {
-          currentY += 1;
-        }
-        // todo: change gravity here
+
+        // change to soft drop gravity
+        dropTime = logic.getSoftDropTime(level);
       }
 
       /* Catch all collision check*/
@@ -235,9 +238,14 @@ public:
       // reset move delay
       fMoveTime = 0;
     } else {
+      if (GetKey(olc::DOWN).bReleased) {
+        // Stop soft drop
+        dropTime = logic.getDropTime(level);
+      }
+      // manually change level for testing
       if (GetKey(olc::F1).bPressed) {
         level += 1;
-        delayTime = logic.getDelayTime(level);
+        dropTime = logic.getDropTime(level);
       }
       if (GetKey(olc::ESCAPE).bPressed) {
         pause = 1;
