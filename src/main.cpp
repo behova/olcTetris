@@ -118,8 +118,7 @@ public:
 
     UI.drawPause(this, score, level, lines);
 
-    std::cout << bag.bagOne.size();
-    std::cout << bag.bagTwo.size() << std::endl;
+    std::cout << bag.bag.size();
 
     if (GetKey(olc::ESCAPE).bPressed) {
       pause = 0;
@@ -171,9 +170,6 @@ public:
     input = 0;
 
     UI.setUI(rows, columns, stX, stY, cellW, cellH);
-
-    // seed srand
-    srand(time(NULL));
 
     // add initial piece
     gameBoard.addPiece(currentPiece, currentRotation, currentX, currentY);

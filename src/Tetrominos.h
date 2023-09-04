@@ -17,10 +17,10 @@ public:
   // Vector that contains each type of tetrimino /// reimplimentation with
   // vectors
   char lastTetrimino;
-  std::vector<char> bagOne;
-  std::vector<char> bagTwo;
-  std::vector<char> charTetriminos = {'O', 'I', 'S', 'Z', 'L', 'J', 'T'};
-  std::vector<tetrimino> vecTetriminos = {
+  std::vector<char> bag;
+  std::vector<char> charTetriminos = {'O', 'I', 'S', 'Z', 'L', 'J', 'T',
+                                      'O', 'I', 'S', 'Z', 'L', 'J', 'T'};
+  tetrimino vecTetriminos[7] = {
       {{0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0}
 
       },
