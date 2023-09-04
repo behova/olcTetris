@@ -6,6 +6,7 @@
 #include "olcPixelGameEngine.h"
 #include <cstdio>
 #include <iostream>
+#include <iterator>
 #include <ostream>
 #include <string>
 
@@ -116,6 +117,9 @@ public:
     UI.drawBoard(this, &gameBoard.currentBoard);
 
     UI.drawPause(this, score, level, lines);
+
+    std::cout << bag.bagOne.size();
+    std::cout << bag.bagTwo.size() << std::endl;
 
     if (GetKey(olc::ESCAPE).bPressed) {
       pause = 0;

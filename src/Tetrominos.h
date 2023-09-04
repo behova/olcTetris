@@ -16,9 +16,10 @@ public:
 
   // Vector that contains each type of tetrimino /// reimplimentation with
   // vectors
-  tetrimino lastTetrimino;
-  std::vector<tetrimino> bagOne;
-  std::vector<tetrimino> bagTwo;
+  char lastTetrimino;
+  std::vector<char> bagOne;
+  std::vector<char> bagTwo;
+  std::vector<char> charTetriminos = {'O', 'I', 'S', 'Z', 'L', 'J', 'T'};
   std::vector<tetrimino> vecTetriminos = {
       {{0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0}
 
@@ -41,6 +42,7 @@ public:
       }
 
   };
+
   // get struct that contains array of tetrimino
   struct tetrimino getVecRandomTetrimino();
 };
