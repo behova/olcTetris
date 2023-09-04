@@ -80,9 +80,8 @@ public:
       lines += gameBoard.checkLines();
 
       // increase level for line accumulation
-      if (logic.getLevel(level, lines) == true) {
+      if (logic.checkLevelIncrease(level, lines) == true) {
         level += 1;
-        lines = 0;
         delayTime = logic.getDelayTime(level);
       }
 
